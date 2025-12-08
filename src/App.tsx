@@ -11,6 +11,7 @@ export default function App() {
 
   const wsRef = useRef(null);
 
+//   const BACKEND_WS_URL = "ws://localhost:9090/ws/paoyao";
   const BACKEND_WS_URL = "wss://paoyao.zhaojunan.com/ws/paoyao";
 
   const joinGame = (name) => {
@@ -35,7 +36,7 @@ export default function App() {
 
       switch (data.type) {
         case "joined":
-          setPlayerId(data.playerId);
+          setPlayerId(data.payload.playerId);
           break;
 
         case "player_list":
