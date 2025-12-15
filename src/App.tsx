@@ -8,11 +8,12 @@ export default function App() {
   const [playerName, setPlayerName] = useState(null);
   const [playerId, setPlayerId] = useState(null);
   const [playerList, setPlayerList] = useState([]);
+  const [dealtCards, setDealtCards] = useState(null);
 
   const wsRef = useRef(null);
 
-//   const BACKEND_WS_URL = "ws://localhost:9090/ws/paoyao";
-  const BACKEND_WS_URL = "wss://paoyao.zhaojunan.com/ws/paoyao";
+  const BACKEND_WS_URL = "ws://localhost:9090/ws/paoyao";
+//   const BACKEND_WS_URL = "wss://paoyao.zhaojunan.com/ws/paoyao";
 
   const joinGame = (name) => {
     setPlayerName(name);
@@ -47,6 +48,10 @@ export default function App() {
           setPhase("game");
           break;
 
+        case "deal_cards":
+          setDealtCards(data.payload);
+          break;
+
         default:
           console.warn("Unknown message:", data);
       }
@@ -75,6 +80,7 @@ export default function App() {
         <GameRoom
           players={playerList}
           selfId={playerId}
+          dealtCards={dealtCards}
         />
      );
   }

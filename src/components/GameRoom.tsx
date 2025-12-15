@@ -6,6 +6,10 @@ import { fullDeck } from '../utils/cardPool.ts';
 interface GameRoomProps {
   players: Player[];
   selfId: string;
+  dealtCards: {
+      playerId: string; // player self id
+      cards: string[];
+  } | null;
 }
 
 function shuffle(array: string[]) {
@@ -17,7 +21,7 @@ function shuffle(array: string[]) {
   return copy;
 }
 
-function arrangeTable(players, selfId) {
+function arrangeTable(players: Player[], selfId: string) {
   if (!players || players.length === 0) return {};
 
   // find self index
@@ -41,7 +45,7 @@ function arrangeTable(players, selfId) {
   };
 }
 
-export default function GameRoom({ players, selfId }: GameRoomProps) {
+export default function GameRoom({ players, selfId, dealtCards }: GameRoomProps) {
   const [cards, setCards] = useState({
     player1: [] as string[],
     player2: [] as string[],
@@ -52,29 +56,45 @@ export default function GameRoom({ players, selfId }: GameRoomProps) {
   const tablePositions = arrangeTable(players, selfId);
 
   useEffect(() => {
-    const shuffled = shuffle(fullDeck);
-    let index = 0;
+    if (!dealtCards) return;
+    if (dealtCards.playerId !== selfId) return;
 
-    const interval = setInterval(() => {
-      if (index >= 108) {
-        clearInterval(interval);
-        return;
-      }
+    setCards(prev => ({
+      ...prev,
+      player1: dealtCards.cards, // bottom player = you
+    }));
+  }, [dealtCards, selfId]);
 
-      const playerIndex = index % 4;
-      const card = shuffled[index];
-      const playerKey = `player${playerIndex + 1}` as keyof typeof cards;
-
-      setCards((prev) => ({
-        ...prev,
-        [playerKey]: [...prev[playerKey], card],
-      }));
-
-      index++;
-    }, 10);
-
-    return () => clearInterval(interval);
-  }, []);
+//   useEffect(() => {
+//     const shuffled = shuffle(fullDeck);
+//     let index = 0;
+//
+//     const interval = setInterval(() => {
+//       if (index >= 108) {
+//         clearInterval(interval);
+//         return;
+//       }
+//
+//       const playerIndex = index % 4;
+//       const card = shuffled[index];
+//       const playerKey = `player${playerIndex + 1}` as keyof typeof cards;
+//
+//       // don't override real hand for yourself
+//       if (playerKey === "player1") {
+//           index++;
+//           return;
+//       }
+//
+//       setCards((prev) => ({
+//         ...prev,
+//         [playerKey]: [...prev[playerKey], card],
+//       }));
+//
+//       index++;
+//     }, 10);
+//
+//     return () => clearInterval(interval);
+//   }, []);
 
   if (!tablePositions.bottom) {
     return <div>Loading table...</div>;
