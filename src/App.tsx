@@ -1,21 +1,21 @@
-import React, { useState, useRef } from "react";
 import WelcomePage from "./components/WelcomePage";
 import WaitingRoom from "./components/WaitingRoom";
-import GameRoom from "./components/GameRoom.tsx";
+import GameRoom from "./components/GameRoom";
+import {useRef, useState} from "react";
 
 export default function App() {
   const [phase, setPhase] = useState("welcome"); // welcome → waiting → game
-  const [playerName, setPlayerName] = useState(null);
-  const [playerId, setPlayerId] = useState(null);
+  const [playerName, setPlayerName] = useState<string | null>(null);
+  const [playerId, setPlayerId] = useState<string | null>(null);
   const [playerList, setPlayerList] = useState([]);
   const [dealtCards, setDealtCards] = useState(null);
 
-  const wsRef = useRef(null);
+  const wsRef = useRef<WebSocket | null>(null);
 
   const BACKEND_WS_URL = "ws://localhost:9090/ws/paoyao";
 //   const BACKEND_WS_URL = "wss://paoyao.zhaojunan.com/ws/paoyao";
 
-  const joinGame = (name) => {
+  const joinGame = (name: string) => {
     setPlayerName(name);
 
     const ws = new WebSocket(BACKEND_WS_URL);
@@ -79,7 +79,7 @@ export default function App() {
     return (
         <GameRoom
           players={playerList}
-          selfId={playerId}
+          selfId={playerId!}
           dealtCards={dealtCards}
         />
      );

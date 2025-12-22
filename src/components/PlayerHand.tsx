@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import AnimatedCard from './AnimatedCard.tsx';
 import { createPortal } from "react-dom";
+import AnimatedCard from "./AnimatedCard";
 
 interface PlayerHandProps {
   cards: string[];
@@ -102,7 +102,7 @@ export default function PlayerHand({
                     cardName={card}
                     partial={isPartial}
                     direction={direction}
-                    selected={selected}
+                    isSelected={selected}
                   />
                 </div>
               );
@@ -128,7 +128,7 @@ export default function PlayerHand({
                     key={i}
                     cardName={card}
                     direction={direction}
-                    selected
+                    isSelected
                   />
                 ))}
               </div>,

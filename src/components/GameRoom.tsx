@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import PlayerHand from './PlayerHand.tsx';
-import Player from '/types/Player.ts';
-import { fullDeck } from '../utils/cardPool.ts';
+import {Player} from "../types/Player";
+import PlayerHand from "./PlayerHand";
+import {useEffect, useState} from "react";
 
 interface GameRoomProps {
   players: Player[];
@@ -10,15 +9,6 @@ interface GameRoomProps {
       playerId: string; // player self id
       cards: string[];
   } | null;
-}
-
-function shuffle(array: string[]) {
-  const copy = [...array];
-  for (let i = copy.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-  return copy;
 }
 
 function arrangeTable(players: Player[], selfId: string) {
@@ -64,37 +54,6 @@ export default function GameRoom({ players, selfId, dealtCards }: GameRoomProps)
       player1: dealtCards.cards, // bottom player = you
     }));
   }, [dealtCards, selfId]);
-
-//   useEffect(() => {
-//     const shuffled = shuffle(fullDeck);
-//     let index = 0;
-//
-//     const interval = setInterval(() => {
-//       if (index >= 108) {
-//         clearInterval(interval);
-//         return;
-//       }
-//
-//       const playerIndex = index % 4;
-//       const card = shuffled[index];
-//       const playerKey = `player${playerIndex + 1}` as keyof typeof cards;
-//
-//       // don't override real hand for yourself
-//       if (playerKey === "player1") {
-//           index++;
-//           return;
-//       }
-//
-//       setCards((prev) => ({
-//         ...prev,
-//         [playerKey]: [...prev[playerKey], card],
-//       }));
-//
-//       index++;
-//     }, 10);
-//
-//     return () => clearInterval(interval);
-//   }, []);
 
   if (!tablePositions.bottom) {
     return <div>Loading table...</div>;
