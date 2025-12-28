@@ -1,17 +1,14 @@
-import {Player} from "../types/Player";
 import PlayerHand from "./PlayerHand";
 import {useEffect, useState} from "react";
+import {DealCardsPayload, GameStatePayload} from "../types/game";
 
 interface GameRoomProps {
-  players: Player[];
+  gameState: GameStatePayload;
   selfId: string;
-  dealtCards: {
-      playerId: string; // player self id
-      cards: string[];
-  } | null;
+  dealtCards: DealCardsPayload | null;
 }
 
-function arrangeTable(players: Player[], selfId: string) {
+function arrangeTable(players: { playerId: string; playerName: string }[], selfId: string) {
   if (!players || players.length === 0) return {};
 
   // find self index
@@ -35,15 +32,13 @@ function arrangeTable(players: Player[], selfId: string) {
   };
 }
 
-export default function GameRoom({ players, selfId, dealtCards }: GameRoomProps) {
+export default function GameRoom({ gameState, selfId, dealtCards }: GameRoomProps) {
   const [cards, setCards] = useState({
     player1: [] as string[],
     player2: [] as string[],
     player3: [] as string[],
     player4: [] as string[],
   });
-
-  const tablePositions = arrangeTable(players, selfId);
 
   useEffect(() => {
     if (!dealtCards) return;
@@ -54,6 +49,17 @@ export default function GameRoom({ players, selfId, dealtCards }: GameRoomProps)
       player1: dealtCards.cards, // bottom player = you
     }));
   }, [dealtCards, selfId]);
+
+  if (!gameState || !gameState.playerStates || gameState.playerStates.length === 0 || !selfId) {
+    return <div>Waiting for game state...</div>;
+  }
+
+  const tablePositions = arrangeTable(gameState.playerStates, selfId);
+
+  const getCardBacks = (playerId: string) => {
+    const player = gameState.playerStates.find(p => p.playerId === playerId);
+    return player ? Array(player.cardCount).fill("BACK") : [];
+  };
 
   if (!tablePositions.bottom) {
     return <div>Loading table...</div>;
@@ -72,7 +78,7 @@ export default function GameRoom({ players, selfId, dealtCards }: GameRoomProps)
         {/* Top */}
         <div className="absolute top-4 left-1/2 -translate-x-1/2">
           <PlayerHand
-            cards={cards.player3}
+            cards={getCardBacks(tablePositions.top.playerId)}
             direction="horizontal"
             playerName={tablePositions.top.playerName}
             position="top"
@@ -92,7 +98,7 @@ export default function GameRoom({ players, selfId, dealtCards }: GameRoomProps)
         {/* Left */}
         <div className="absolute left-4 top-1/2 -translate-y-1/2">
           <PlayerHand
-            cards={cards.player4}
+            cards={getCardBacks(tablePositions.left.playerId)}
             direction="vertical"
             playerName={tablePositions.left.playerName}
             position="left"
@@ -102,7 +108,7 @@ export default function GameRoom({ players, selfId, dealtCards }: GameRoomProps)
         {/* Right */}
         <div className="absolute right-4 top-1/2 -translate-y-1/2">
           <PlayerHand
-            cards={cards.player2}
+            cards={getCardBacks(tablePositions.right.playerId)}
             direction="vertical"
             playerName={tablePositions.right.playerName}
             position="right"

@@ -2,13 +2,15 @@ import WelcomePage from "./components/WelcomePage";
 import WaitingRoom from "./components/WaitingRoom";
 import GameRoom from "./components/GameRoom";
 import {useRef, useState} from "react";
+import {DealCardsPayload, GameStatePayload} from "./types/game";
 
 export default function App() {
   const [phase, setPhase] = useState("welcome"); // welcome → waiting → game
   const [playerName, setPlayerName] = useState<string | null>(null);
   const [playerId, setPlayerId] = useState<string | null>(null);
   const [playerList, setPlayerList] = useState([]);
-  const [dealtCards, setDealtCards] = useState(null);
+  const [dealtCards, setDealtCards] = useState<DealCardsPayload | null>(null);
+  const [gameState, setGameState] = useState<GameStatePayload | null>(null);
 
   const wsRef = useRef<WebSocket | null>(null);
 
@@ -52,6 +54,10 @@ export default function App() {
           setDealtCards(data.payload);
           break;
 
+        case "game_state":
+          setGameState(data.payload);
+          break;
+
         default:
           console.warn("Unknown message:", data);
       }
@@ -75,14 +81,14 @@ export default function App() {
     );
   }
 
-  if (phase === "game") {
+  if (phase === "game" && gameState) {
     return (
         <GameRoom
-          players={playerList}
-          selfId={playerId!}
-          dealtCards={dealtCards}
+            gameState={gameState}
+            selfId={playerId!}
+            dealtCards={dealtCards}
         />
-     );
+    );
   }
 
   return null;

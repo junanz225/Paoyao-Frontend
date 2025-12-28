@@ -9,6 +9,7 @@ interface AnimatedCardProps {
 
 export default function AnimatedCard({ cardName, partial = false, direction = 'horizontal', isSelected = false }: AnimatedCardProps) {
   const isVertical = direction === 'vertical';
+  const imageName = cardName === "BACK"? "back": cardName;
 
   // Base card styles
   const cardStyle = {
@@ -42,8 +43,8 @@ export default function AnimatedCard({ cardName, partial = false, direction = 'h
       style={{ ...cardStyle, ...clipStyle, ...selectedStyle, position: 'relative' }}
     >
       <img
-        src={`${process.env.PUBLIC_URL}/cards/${cardName}.svg`}
-        alt={cardName}
+        src={`${process.env.PUBLIC_URL}/cards/${imageName}.svg`}
+        alt={imageName}
         onError={(e) => {
             console.warn(`Missing image for card: ${cardName}`);
             (e.target as HTMLImageElement).src = `${process.env.PUBLIC_URL}/cards/back.svg`; // fallback
