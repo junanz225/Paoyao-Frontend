@@ -1,6 +1,6 @@
 import PlayerHand from "./PlayerHand";
 import {useEffect, useState} from "react";
-import {DealCardsPayload, GameStatePayload} from "../types/game";
+import {DealCardsPayload, GameStatePayload} from "../models/Game";
 
 interface GameRoomProps {
   gameState: GameStatePayload;

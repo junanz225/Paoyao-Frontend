@@ -2,7 +2,7 @@ import WelcomePage from "./components/WelcomePage";
 import WaitingRoom from "./components/WaitingRoom";
 import GameRoom from "./components/GameRoom";
 import {useRef, useState} from "react";
-import {DealCardsPayload, GameStatePayload} from "./types/game";
+import {DealCardsPayload, GameStatePayload} from "./models/Game";
 
 export default function App() {
   const [phase, setPhase] = useState("welcome"); // welcome → waiting → game
