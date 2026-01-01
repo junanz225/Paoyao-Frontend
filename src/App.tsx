@@ -3,6 +3,7 @@ import WaitingRoom from "./components/WaitingRoom";
 import GameRoom from "./components/GameRoom";
 import {useRef, useState} from "react";
 import {DealCardsPayload, GameStatePayload} from "./models/Game";
+import {sendMessage} from "./utilities/wsClient";
 
 export default function App() {
   const [phase, setPhase] = useState("welcome"); // welcome → waiting → game
@@ -24,12 +25,9 @@ export default function App() {
     wsRef.current = ws;
 
     ws.onopen = () => {
-      ws.send(
-        JSON.stringify({
-          type: "join",
-          name: name,
-        })
-      );
+      sendMessage(ws, "join", {
+        name,
+      });
       setPhase("waiting");
     };
 
