@@ -2,7 +2,7 @@ import WelcomePage from "./components/WelcomePage";
 import WaitingRoom from "./components/WaitingRoom";
 import GameRoom from "./components/GameRoom";
 import {useRef, useState} from "react";
-import {DealCardsPayload, GameStatePayload} from "./models/Game";
+import {GameStatePayload} from "./models/Game";
 import {sendMessage} from "./utilities/wsClient";
 
 export default function App() {
@@ -10,7 +10,7 @@ export default function App() {
   const [playerName, setPlayerName] = useState<string | null>(null);
   const [playerId, setPlayerId] = useState<string | null>(null);
   const [playerList, setPlayerList] = useState([]);
-  const [dealtCards, setDealtCards] = useState<DealCardsPayload | null>(null);
+  const [hand, setHand] = useState<string[]>([]);
   const [gameState, setGameState] = useState<GameStatePayload | null>(null);
 
   const wsRef = useRef<WebSocket | null>(null);
@@ -49,7 +49,7 @@ export default function App() {
           break;
 
         case "deal_cards":
-          setDealtCards(data.payload);
+          setHand(data.payload.cards);
           break;
 
         case "game_state":
@@ -84,7 +84,7 @@ export default function App() {
         <GameRoom
             gameState={gameState}
             selfId={playerId!}
-            dealtCards={dealtCards}
+            hand={hand}
         />
     );
   }

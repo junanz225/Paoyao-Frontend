@@ -1,11 +1,10 @@
 import PlayerHand from "./PlayerHand";
-import {useEffect, useState} from "react";
-import {DealCardsPayload, GameStatePayload} from "../models/Game";
+import {GameStatePayload} from "../models/Game";
 
 interface GameRoomProps {
   gameState: GameStatePayload;
   selfId: string;
-  dealtCards: DealCardsPayload | null;
+  hand: string[];
 }
 
 function arrangeTable(players: { playerId: string; playerName: string }[], selfId: string) {
@@ -32,23 +31,7 @@ function arrangeTable(players: { playerId: string; playerName: string }[], selfI
   };
 }
 
-export default function GameRoom({ gameState, selfId, dealtCards }: GameRoomProps) {
-  const [cards, setCards] = useState({
-    player1: [] as string[],
-    player2: [] as string[],
-    player3: [] as string[],
-    player4: [] as string[],
-  });
-
-  useEffect(() => {
-    if (!dealtCards) return;
-    if (dealtCards.playerId !== selfId) return;
-
-    setCards(prev => ({
-      ...prev,
-      player1: dealtCards.cards, // bottom player = you
-    }));
-  }, [dealtCards, selfId]);
+export default function GameRoom({ gameState, selfId, hand }: GameRoomProps) {
 
   if (!gameState || !gameState.playerStates || gameState.playerStates.length === 0 || !selfId) {
     return <div>Waiting for game state...</div>;
@@ -88,7 +71,7 @@ export default function GameRoom({ gameState, selfId, dealtCards }: GameRoomProp
         {/* Bottom (SELF) */}
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2">
           <PlayerHand
-            cards={cards.player1}
+            cards={hand}
             direction="horizontal"
             playerName={tablePositions.bottom.playerName}
             position="bottom"

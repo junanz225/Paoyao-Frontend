@@ -10,8 +10,3 @@ export interface GameStatePayload {
     table: string[];
     tablePoints: number;
 }
-
-export interface DealCardsPayload {
-    playerId: string; // player self id
-    cards: string[];
-}
