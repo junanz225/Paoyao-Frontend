@@ -7,6 +7,7 @@ interface PlayerHandProps {
   direction?: 'horizontal' | 'vertical';
   playerName: string;
   position: 'top' | 'bottom' | 'left' | 'right';
+  onConfirm?: (cards: string[]) => void;
 }
 
 export default function PlayerHand({
@@ -14,6 +15,7 @@ export default function PlayerHand({
   direction = 'horizontal',
   playerName,
   position,
+  onConfirm
 }: PlayerHandProps) {
   const [selectedIndexes, setSelectedIndexes] = useState<number[]>([]);
   const [playedCards, setPlayedCards] = useState<string[]>([]);
@@ -37,6 +39,7 @@ export default function PlayerHand({
   const handleConfirm = () => {
       const selected = selectedIndexes.map(i => handCards[i]);
 
+      onConfirm?.(selected);
       const remaining = handCards.filter((_, i) => !selectedIndexes.includes(i));
 
       setPlayedCards(selected);

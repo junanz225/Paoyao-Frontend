@@ -74,7 +74,7 @@ export default function App() {
     return (
       <WaitingRoom
         players={playerList}
-        selfName={playerName}
+        // selfName={playerName}
       />
     );
   }
@@ -85,6 +85,9 @@ export default function App() {
             gameState={gameState}
             selfId={playerId!}
             hand={hand}
+            onConfirmPlay={(cards) => {
+              console.log("Played cards:", cards);
+            }}
         />
     );
   }

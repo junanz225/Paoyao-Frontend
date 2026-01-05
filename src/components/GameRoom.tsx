@@ -6,9 +6,10 @@ interface GameRoomProps {
   gameState: GameStatePayload;
   selfId: string;
   hand: string[];
+  onConfirmPlay: (cards: string[]) => void;
 }
 
-export default function GameRoom({ gameState, selfId, hand }: GameRoomProps) {
+export default function GameRoom({ gameState, selfId, hand, onConfirmPlay }: GameRoomProps) {
 
   if (!gameState || !gameState.playerStates || gameState.playerStates.length === 0 || !selfId) {
     return <div>Waiting for game state...</div>;
@@ -52,6 +53,7 @@ export default function GameRoom({ gameState, selfId, hand }: GameRoomProps) {
             direction="horizontal"
             playerName={tablePositions.bottom.playerName}
             position="bottom"
+            onConfirm={onConfirmPlay}
           />
         </div>
 

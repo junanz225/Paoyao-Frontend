@@ -1,11 +1,11 @@
 import React from "react";
 
-export default function WaitingRoom({ players, selfName }) {
+export default function WaitingRoom({ players }) {
   return (
     <div style={{ padding: 40, textAlign: "center" }}>
       <h1>Waiting Room</h1>
 
-      <p>You joined as: <strong>{selfName}</strong></p>
+      {/*<p>You joined as: <strong>{selfName}</strong></p>*/}
       <p>Waiting for 4 players to join...</p>
 
       <h2 style={{ marginTop: 30 }}>Players:</h2>
