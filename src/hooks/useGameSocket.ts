@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { joinMessage, playCardsMessage } from "../utilities/protocol";
 
 const WS_URL = "ws://localhost:9090/ws/paoyao";

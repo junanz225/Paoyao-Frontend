@@ -2,10 +2,10 @@ import WaitingRoom from "../components/WaitingRoom";
 import GameRoom from "../components/GameRoom";
 import {useGameSocket} from "../hooks/useGameSocket";
 import {GameStatePayload} from "../models/Game";
-import {useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import { PlayerStateDTO } from "../models/Game";
 
-export default function GameRoomPage() {
+export default function GameRoomPage({ playerName } : {playerName: string}) {
     const [phase, setPhase] = useState<"waiting" | "game">("waiting");
     const [playerId, setPlayerId] = useState<string | null>(null);
     const [players, setPlayers] = useState<PlayerStateDTO[]>([]);
@@ -19,6 +19,16 @@ export default function GameRoomPage() {
         onDealCards: setHand,
         onGameState: setGameState,
     });
+
+    const hasConnectedRef = useRef(false)
+
+    useEffect(() => {
+        if (hasConnectedRef.current) return;
+
+        socket.connect(playerName);
+        hasConnectedRef.current = true;
+    }, [playerName]);
+
 
     if (phase === "waiting") {
         return <WaitingRoom players={players} />;
