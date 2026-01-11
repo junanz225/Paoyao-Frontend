@@ -11,6 +11,8 @@ interface GameRoomProps {
 
 export default function GameRoom({ gameState, selfId, hand, onConfirmPlay }: GameRoomProps) {
 
+  const tableState = gameState.tableState;
+
   if (!gameState || !gameState.playerStates || gameState.playerStates.length === 0 || !selfId) {
     return <div>Waiting for game state...</div>;
   }
@@ -33,7 +35,33 @@ export default function GameRoom({ gameState, selfId, hand, onConfirmPlay }: Gam
         {/* Table (center) */}
         <div className="absolute top-1/2 left-1/2 w-[65vw] h-[35vw] bg-green-600 shadow-inner
                        -translate-x-1/2 -translate-y-1/2 flex items-center justify-center text-white text-2xl font-bold">
-          Table
+          {tableState.cards.length === 0 ? (
+              <div className="text-xl opacity-70">No cards on table</div>
+          ) : (
+                  <>
+                    {/* Last played player */}
+                    <div className="mb-3 text-lg">
+                      Last played by:{" "}
+                      {
+                          gameState.playerStates.find(
+                              p => p.playerId === tableState.lastPlayedPlayerId
+                          )?.playerName ?? "Unknown"
+                      }
+                    </div>
+
+                    {/* Cards */}
+                    <div className="flex gap-2">
+                      {tableState.cards.map(card => (
+                          <div
+                              key={card}
+                              className="bg-white text-black px-2 py-1 rounded shadow"
+                          >
+                            {card}
+                          </div>
+                      ))}
+                    </div>
+                  </>
+              )}
         </div>
 
         {/* Top */}

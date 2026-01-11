@@ -7,6 +7,11 @@ export interface PlayerStateDTO {
 export interface GameStatePayload {
     playerStates: PlayerStateDTO[];
     currentTurnPlayerId: string | null;
-    table: string[];
+    tableState: TableStateDTO;
     tablePoints: number;
+}
+
+export interface TableStateDTO {
+    lastPlayedPlayerId: string | null;
+    cards: string[];
 }
