@@ -37,6 +37,7 @@ export function useGameSocket(handlers: {
                     handlers.onDealCards(data.payload.cards);
                     break;
                 case "game_state":
+                    console.log("game_state: ", data.payload);
                     handlers.onGameState(data.payload);
                     break;
             }

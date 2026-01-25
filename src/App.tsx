@@ -6,7 +6,6 @@ export default function App() {
   const [joined, setJoined] = useState(false);
   const [playerName, setPlayerName] = useState<string | null>(null);
 
-
   if (!joined) {
     return(
         <WelcomePage

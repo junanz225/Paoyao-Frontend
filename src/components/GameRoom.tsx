@@ -11,7 +11,10 @@ interface GameRoomProps {
 
 export default function GameRoom({ gameState, selfId, hand, onConfirmPlay }: GameRoomProps) {
 
-  const tableState = gameState.tableState;
+  const tableState = gameState.tableState ?? {
+    lastPlayedPlayerId: null,
+    cards: [],
+  };
 
   if (!gameState || !gameState.playerStates || gameState.playerStates.length === 0 || !selfId) {
     return <div>Waiting for game state...</div>;
@@ -51,9 +54,9 @@ export default function GameRoom({ gameState, selfId, hand, onConfirmPlay }: Gam
 
                     {/* Cards */}
                     <div className="flex gap-2">
-                      {tableState.cards.map(card => (
+                      {tableState.cards.map((card, i) => (
                           <div
-                              key={card}
+                              key={`${card}-${i}`}
                               className="bg-white text-black px-2 py-1 rounded shadow"
                           >
                             {card}

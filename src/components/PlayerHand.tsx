@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { createPortal } from "react-dom";
 import AnimatedCard from "./AnimatedCard";
 
 interface PlayerHandProps {
@@ -18,7 +17,6 @@ export default function PlayerHand({
   onConfirm
 }: PlayerHandProps) {
   const [selectedIndexes, setSelectedIndexes] = useState<number[]>([]);
-  const [playedCards, setPlayedCards] = useState<string[]>([]);
   const [handCards, setHandCards] = useState<string[]>(cards);
 
   useEffect(() => {
@@ -39,11 +37,9 @@ export default function PlayerHand({
   const handleConfirm = () => {
       const selected = selectedIndexes.map(i => handCards[i]);
 
-      onConfirm?.(selected);
-      const remaining = handCards.filter((_, i) => !selectedIndexes.includes(i));
+      console.log("CONFIRM clicked, selected:", selected);
 
-      setPlayedCards(selected);
-      setHandCards(remaining);
+      onConfirm?.(selected);
       setSelectedIndexes([]);
   };
 
@@ -122,21 +118,6 @@ export default function PlayerHand({
             )}
           </div>
         </div>
-
-        {playedCards.length > 0 && (
-          createPortal(
-              <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex gap-2 z-50">
-                {playedCards.map((card, i) => (
-                  <AnimatedCard
-                    key={i}
-                    cardName={card}
-                    direction={direction}
-                    isSelected
-                  />
-                ))}
-              </div>,
-              document.body
-        ))}
       </>
   );
 }

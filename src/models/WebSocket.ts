@@ -5,4 +5,4 @@ export interface WebSocketMessage<T> {
 
 export type ClientMessage =
     | { type: "join"; payload: { name: string } }
-    | { type: "play_cards"; payload: { cards: string[] } };
+    | { type: "play_cards"; payload: { playedCards: string[] } };
