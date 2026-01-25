@@ -16,9 +16,9 @@ export default function Table({ tableState, players }: Props) {
 
     return (
         <div>
-            <h3>
+            <h4>
                 Last played by: {lastPlayer?.playerName ?? "Unknown"}
-            </h3>
+            </h4>
 
             <div style={{ display: "flex", gap: "8px" }}>
                 {tableState.cards.map(card => (

@@ -1,6 +1,7 @@
 import PlayerHand from "./PlayerHand";
 import {GameStatePayload} from "../models/Game";
 import {arrangeTable} from "../utilities/table";
+import AnimatedCard from "./AnimatedCard";
 
 interface GameRoomProps {
   gameState: GameStatePayload;
@@ -54,13 +55,12 @@ export default function GameRoom({ gameState, selfId, hand, onConfirmPlay }: Gam
 
                     {/* Cards */}
                     <div className="flex gap-2">
-                      {tableState.cards.map((card, i) => (
-                          <div
-                              key={`${card}-${i}`}
-                              className="bg-white text-black px-2 py-1 rounded shadow"
-                          >
-                            {card}
-                          </div>
+                      {tableState.cards.map((card, idx) => (
+                          <AnimatedCard
+                              key={idx}
+                              cardName={card}
+                              direction="horizontal"
+                          />
                       ))}
                     </div>
                   </>
