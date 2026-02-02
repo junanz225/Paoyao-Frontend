@@ -9,6 +9,7 @@ export function useGameSocket(handlers: {
     onGameStart: () => void;
     onDealCards: (cards: string[]) => void;
     onGameState: (state: any) => void;
+    onHandUpdate: (cards: string[]) => void;
 }) {
     const wsRef = useRef<WebSocket | null>(null);
 
@@ -35,6 +36,9 @@ export function useGameSocket(handlers: {
                     break;
                 case "deal_cards":
                     handlers.onDealCards(data.payload.cards);
+                    break;
+                case "hand_update":
+                    handlers.onHandUpdate(data.payload.cards);
                     break;
                 case "game_state":
                     console.log("game_state: ", data.payload);

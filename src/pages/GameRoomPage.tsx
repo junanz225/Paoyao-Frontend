@@ -18,6 +18,7 @@ export default function GameRoomPage({ playerName } : {playerName: string}) {
         onGameStart: () => setPhase("game"),
         onDealCards: setHand,
         onGameState: setGameState,
+        onHandUpdate: setHand
     });
 
     const hasConnectedRef = useRef(false)
