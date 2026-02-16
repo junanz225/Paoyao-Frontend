@@ -28,7 +28,7 @@ export default function GameRoomPage({ playerName } : {playerName: string}) {
 
         socket.connect(playerName);
         hasConnectedRef.current = true;
-    }, [playerName]);
+    }, [socket, playerName]);
 
 
     if (phase === "waiting") {
