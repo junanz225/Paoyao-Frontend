@@ -46,10 +46,24 @@ export function useGameSocket(handlers: {
                     break;
             }
         };
+
+        ws.onclose = (event) => {
+            console.log("WebSocket closed:", event.code, event.reason);
+        };
+
+        ws.onerror = (err) => {
+            console.error("WebSocket error:", err);
+        };
     };
 
     const playCards = (cards: string[]) => {
-        wsRef.current?.send(JSON.stringify(playCardsMessage(cards)));
+        if (!wsRef.current) return;
+
+        if (wsRef.current.readyState === WebSocket.OPEN) {
+            wsRef.current.send(JSON.stringify(playCardsMessage(cards)));
+        } else {
+            console.error("WebSocket is not open. Current state:", wsRef.current.readyState);
+        }
     };
 
     return { connect, playCards };
