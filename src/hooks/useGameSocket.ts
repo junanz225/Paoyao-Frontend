@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { joinMessage, playCardsMessage } from "../utilities/protocol";
+import { joinMessage, playCardsMessage, passMessage } from "../utilities/protocol";
 
 const WS_URL = "wss://paoyao.zhaojunan.com/ws/paoyao";
 
@@ -66,5 +66,15 @@ export function useGameSocket(handlers: {
         }
     };
 
-    return { connect, playCards };
+    const pass = () => {
+        if (!wsRef.current) return;
+
+        if (wsRef.current.readyState === WebSocket.OPEN) {
+            wsRef.current.send(JSON.stringify(passMessage()));
+        } else {
+            console.error("WebSocket is not open. Current state:", wsRef.current.readyState);
+        }
+    };
+
+    return { connect, playCards, pass };
 }

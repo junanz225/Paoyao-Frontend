@@ -8,9 +8,10 @@ interface GameRoomProps {
   selfId: string;
   hand: string[];
   onConfirmPlay: (cards: string[]) => void;
+  onPass: () => void;
 }
 
-export default function GameRoom({ gameState, selfId, hand, onConfirmPlay }: GameRoomProps) {
+export default function GameRoom({ gameState, selfId, hand, onConfirmPlay, onPass }: GameRoomProps) {
 
   const tableState = gameState.tableState ?? {
     lastPlayedPlayerId: null,
@@ -85,6 +86,7 @@ export default function GameRoom({ gameState, selfId, hand, onConfirmPlay }: Gam
             playerName={tablePositions.bottom.playerName}
             position="bottom"
             onConfirm={onConfirmPlay}
+            onPass={onPass}
           />
         </div>
 

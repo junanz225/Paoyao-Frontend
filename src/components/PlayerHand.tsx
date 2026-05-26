@@ -8,6 +8,7 @@ interface PlayerHandProps {
   playerName: string;
   position: 'top' | 'bottom' | 'left' | 'right';
   onConfirm?: (cards: string[]) => void;
+  onPass?: () => void;
 }
 
 export default function PlayerHand({
@@ -15,7 +16,8 @@ export default function PlayerHand({
   direction = 'horizontal',
   playerName,
   position,
-  onConfirm
+  onConfirm,
+  onPass
 }: PlayerHandProps) {
   const [selectedIndexes, setSelectedIndexes] = useState<number[]>([]);
   const [handCards, setHandCards] = useState<string[]>(cards);
@@ -42,6 +44,11 @@ export default function PlayerHand({
     console.log("CONFIRM clicked, selected:", selected);
     onConfirm?.(selected);
     setSelectedIndexes([]);
+  };
+
+  const handlePass = () => {
+    setSelectedIndexes([]); // clear any selected cards before passing
+    onPass?.();
   };
 
   const handleSort = () => {
@@ -133,6 +140,17 @@ export default function PlayerHand({
               onClick={handleConfirm}
             >
               Confirm
+            </button>
+          )}
+
+          {/* Pass button — always visible for bottom player */}
+          {isBottom && (
+            <button
+              className="absolute px-4 py-2 bg-yellow-500 text-white rounded-lg shadow z-50 whitespace-nowrap"
+              style={{ top: '-45px', left: '0px' }}
+              onClick={handlePass}
+            >
+              Pass
             </button>
           )}
 

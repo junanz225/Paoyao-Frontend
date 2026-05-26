@@ -42,6 +42,7 @@ export default function GameRoomPage({ playerName } : {playerName: string}) {
                 selfId={playerId}
                 hand={hand}
                 onConfirmPlay={socket.playCards}
+                onPass={socket.pass}
             />
         );
     }
