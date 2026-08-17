@@ -24,6 +24,9 @@ export default function GameRoom({ gameState, selfId, hand, onConfirmPlay, onPas
 
   const tablePositions = arrangeTable(gameState.playerStates, selfId);
 
+  const isCurrentTurn = (playerId: string) =>
+      gameState.currentTurnPlayerId === playerId;
+
   const getCardBacks = (playerId: string) => {
     const player = gameState.playerStates.find(p => p.playerId === playerId);
     return player ? Array(player.cardCount).fill("BACK") : [];
@@ -69,7 +72,11 @@ export default function GameRoom({ gameState, selfId, hand, onConfirmPlay, onPas
         </div>
 
         {/* Top */}
-        <div className="absolute top-4 left-1/2 -translate-x-1/2">
+        <div
+          className={`absolute top-4 left-1/2 -translate-x-1/2 rounded-xl transition-all ${
+            isCurrentTurn(tablePositions.top.playerId) ? "ring-4 ring-yellow-400" : ""
+          }`}
+        >
           <PlayerHand
             cards={getCardBacks(tablePositions.top.playerId)}
             direction="horizontal"
@@ -79,7 +86,11 @@ export default function GameRoom({ gameState, selfId, hand, onConfirmPlay, onPas
         </div>
 
         {/* Bottom (SELF) */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2">
+        <div
+          className={`absolute bottom-4 left-1/2 -translate-x-1/2 rounded-xl transition-all ${
+            isCurrentTurn(tablePositions.bottom.playerId) ? "ring-4 ring-yellow-400" : ""
+          }`}
+        >
           <PlayerHand
             cards={hand}
             direction="horizontal"
@@ -91,7 +102,11 @@ export default function GameRoom({ gameState, selfId, hand, onConfirmPlay, onPas
         </div>
 
         {/* Left */}
-        <div className="absolute left-4 top-1/2 -translate-y-1/2">
+        <div
+          className={`absolute left-4 top-1/2 -translate-y-1/2 rounded-xl transition-all ${
+            isCurrentTurn(tablePositions.left.playerId) ? "ring-4 ring-yellow-400" : ""
+          }`}
+        >
           <PlayerHand
             cards={getCardBacks(tablePositions.left.playerId)}
             direction="vertical"
@@ -101,7 +116,11 @@ export default function GameRoom({ gameState, selfId, hand, onConfirmPlay, onPas
         </div>
 
         {/* Right */}
-        <div className="absolute right-4 top-1/2 -translate-y-1/2">
+        <div
+          className={`absolute right-4 top-1/2 -translate-y-1/2 rounded-xl transition-all ${
+            isCurrentTurn(tablePositions.right.playerId) ? "ring-4 ring-yellow-400" : ""
+          }`}
+        >
           <PlayerHand
             cards={getCardBacks(tablePositions.right.playerId)}
             direction="vertical"

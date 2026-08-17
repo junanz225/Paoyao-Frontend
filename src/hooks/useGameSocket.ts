@@ -1,7 +1,8 @@
 import { useRef } from "react";
 import { joinMessage, playCardsMessage, passMessage } from "../utilities/protocol";
 
-const WS_URL = "wss://paoyao.zhaojunan.com/ws/paoyao";
+const WS_URL = "ws://localhost:9090/ws/paoyao";
+// const WS_URL = "wss://paoyao.zhaojunan.com/ws/paoyao";
 
 export function useGameSocket(handlers: {
     onJoined: (playerId: string) => void;
