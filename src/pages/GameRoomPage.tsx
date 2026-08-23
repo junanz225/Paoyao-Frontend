@@ -11,6 +11,7 @@ export default function GameRoomPage({ playerName } : {playerName: string}) {
     const [players, setPlayers] = useState<PlayerStateDTO[]>([]);
     const [hand, setHand] = useState<string[]>([]);
     const [gameState, setGameState] = useState<GameStatePayload | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const socket = useGameSocket({
         onJoined: setPlayerId,
@@ -18,7 +19,8 @@ export default function GameRoomPage({ playerName } : {playerName: string}) {
         onGameStart: () => setPhase("game"),
         onDealCards: setHand,
         onGameState: setGameState,
-        onHandUpdate: setHand
+        onHandUpdate: setHand,
+        onError: setErrorMessage
     });
 
     const hasConnectedRef = useRef(false)
@@ -30,6 +32,12 @@ export default function GameRoomPage({ playerName } : {playerName: string}) {
         hasConnectedRef.current = true;
     }, [socket, playerName]);
 
+    useEffect(() => {
+        if (!errorMessage) return;
+        const timer = setTimeout(() => setErrorMessage(null), 2500);
+        return () => clearTimeout(timer);
+    }, [errorMessage]);
+
 
     if (phase === "waiting") {
         return <WaitingRoom players={players} />;
@@ -37,13 +45,21 @@ export default function GameRoomPage({ playerName } : {playerName: string}) {
 
     if (phase === "game" && gameState && playerId) {
         return (
-            <GameRoom
-                gameState={gameState}
-                selfId={playerId}
-                hand={hand}
-                onConfirmPlay={socket.playCards}
-                onPass={socket.pass}
-            />
+            <>
+                {errorMessage && (
+                    <div className="fixed top-6 left-1/2 -translate-x-1/2 bg-red-600 text-white
+                                     px-6 py-3 rounded-lg shadow-lg z-[100] font-bold">
+                        {errorMessage}
+                    </div>
+                )}
+                <GameRoom
+                    gameState={gameState}
+                    selfId={playerId}
+                    hand={hand}
+                    onConfirmPlay={socket.playCards}
+                    onPass={socket.pass}
+                />
+            </>
         );
     }
 

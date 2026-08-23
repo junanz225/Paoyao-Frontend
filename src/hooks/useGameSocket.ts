@@ -1,8 +1,8 @@
 import { useRef } from "react";
 import { joinMessage, playCardsMessage, passMessage } from "../utilities/protocol";
 
-const WS_URL = "ws://localhost:9090/ws/paoyao";
-// const WS_URL = "wss://paoyao.zhaojunan.com/ws/paoyao";
+// const WS_URL = "ws://localhost:9090/ws/paoyao";
+const WS_URL = "wss://paoyao.zhaojunan.com/ws/paoyao";
 
 export function useGameSocket(handlers: {
     onJoined: (playerId: string) => void;
@@ -11,6 +11,7 @@ export function useGameSocket(handlers: {
     onDealCards: (cards: string[]) => void;
     onGameState: (state: any) => void;
     onHandUpdate: (cards: string[]) => void;
+    onError: (message: string) => void;
 }) {
     const wsRef = useRef<WebSocket | null>(null);
 
@@ -44,6 +45,9 @@ export function useGameSocket(handlers: {
                 case "game_state":
                     console.log("game_state: ", data.payload);
                     handlers.onGameState(data.payload);
+                    break;
+                case "error":
+                    handlers.onError(data.payload);
                     break;
             }
         };
