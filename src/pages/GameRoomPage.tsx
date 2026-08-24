@@ -12,6 +12,7 @@ export default function GameRoomPage({ playerName } : {playerName: string}) {
     const [hand, setHand] = useState<string[]>([]);
     const [gameState, setGameState] = useState<GameStatePayload | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [roundWinner, setRoundWinner] = useState<string | null>(null);
 
     const socket = useGameSocket({
         onJoined: setPlayerId,
@@ -20,7 +21,8 @@ export default function GameRoomPage({ playerName } : {playerName: string}) {
         onDealCards: setHand,
         onGameState: setGameState,
         onHandUpdate: setHand,
-        onError: setErrorMessage
+        onError: setErrorMessage,
+        onRoundEnd: (payload) => setRoundWinner(payload.winnerName)
     });
 
     const hasConnectedRef = useRef(false)
@@ -38,6 +40,12 @@ export default function GameRoomPage({ playerName } : {playerName: string}) {
         return () => clearTimeout(timer);
     }, [errorMessage]);
 
+    useEffect(() => {
+        if (!roundWinner) return;
+        const timer = setTimeout(() => setRoundWinner(null), 2500);
+        return () => clearTimeout(timer);
+    }, [roundWinner]);
+
 
     if (phase === "waiting") {
         return <WaitingRoom players={players} />;
@@ -50,6 +58,12 @@ export default function GameRoomPage({ playerName } : {playerName: string}) {
                     <div className="fixed top-6 left-1/2 -translate-x-1/2 bg-red-600 text-white
                                      px-6 py-3 rounded-lg shadow-lg z-[100] font-bold">
                         {errorMessage}
+                    </div>
+                )}
+                {roundWinner && (
+                    <div className="fixed top-6 left-1/2 -translate-x-1/2 bg-yellow-500 text-white
+                                     px-6 py-3 rounded-lg shadow-lg z-[100] font-bold">
+                        {roundWinner} won the round!
                     </div>
                 )}
                 <GameRoom

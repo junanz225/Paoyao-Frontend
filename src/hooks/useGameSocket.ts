@@ -12,6 +12,7 @@ export function useGameSocket(handlers: {
     onGameState: (state: any) => void;
     onHandUpdate: (cards: string[]) => void;
     onError: (message: string) => void;
+    onRoundEnd: (payload: { winnerId: string; winnerName: string }) => void; // <-- new
 }) {
     const wsRef = useRef<WebSocket | null>(null);
 
@@ -48,6 +49,9 @@ export function useGameSocket(handlers: {
                     break;
                 case "error":
                     handlers.onError(data.payload);
+                    break;
+                case "round_end":
+                    handlers.onRoundEnd(data.payload);
                     break;
             }
         };
