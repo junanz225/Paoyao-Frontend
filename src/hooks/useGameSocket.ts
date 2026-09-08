@@ -1,8 +1,8 @@
 import { useRef } from "react";
 import { joinMessage, playCardsMessage, passMessage } from "../utilities/protocol";
 
-// const WS_URL = "ws://localhost:9090/ws/paoyao";
-const WS_URL = "wss://paoyao.zhaojunan.com/ws/paoyao";
+const WS_URL = "ws://localhost:9090/ws/paoyao";
+// const WS_URL = "wss://paoyao.zhaojunan.com/ws/paoyao";
 
 export function useGameSocket(handlers: {
     onJoined: (playerId: string) => void;
@@ -12,7 +12,7 @@ export function useGameSocket(handlers: {
     onGameState: (state: any) => void;
     onHandUpdate: (cards: string[]) => void;
     onError: (message: string) => void;
-    onRoundEnd: (payload: { winnerId: string; winnerName: string }) => void; // <-- new
+    onRoundEnd: (payload: { winnerId: string; winnerName: string; teamScores: Record<string, number> }) => void; // <-- new
 }) {
     const wsRef = useRef<WebSocket | null>(null);
 

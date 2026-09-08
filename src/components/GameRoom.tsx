@@ -7,11 +7,12 @@ interface GameRoomProps {
   gameState: GameStatePayload;
   selfId: string;
   hand: string[];
+  teamScores: Record<string, number>;
   onConfirmPlay: (cards: string[]) => void;
   onPass: () => void;
 }
 
-export default function GameRoom({ gameState, selfId, hand, onConfirmPlay, onPass }: GameRoomProps) {
+export default function GameRoom({ gameState, selfId, hand, teamScores, onConfirmPlay, onPass }: GameRoomProps) {
 
   const tableState = gameState.tableState ?? {
     lastPlayedPlayerId: null,
@@ -39,6 +40,10 @@ export default function GameRoom({ gameState, selfId, hand, onConfirmPlay, onPas
   return (
     <div className="min-h-screen bg-green-300 p-2 flex items-center justify-center">
       <div className="relative w-screen h-screen bg-green-300">
+        <div className="absolute top-4 left-4 bg-black/60 text-white px-4 py-2 rounded-lg z-50 font-bold">
+            <div>Team A: {teamScores["0"] ?? 0}</div>
+            <div>Team B: {teamScores["1"] ?? 0}</div>
+        </div>
 
         {/* Table (center) */}
         <div className="absolute top-1/2 left-1/2 w-[65vw] h-[35vw] bg-green-600 shadow-inner

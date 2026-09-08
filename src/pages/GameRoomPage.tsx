@@ -13,6 +13,7 @@ export default function GameRoomPage({ playerName } : {playerName: string}) {
     const [gameState, setGameState] = useState<GameStatePayload | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [roundWinner, setRoundWinner] = useState<string | null>(null);
+    const [teamScores, setTeamScores] = useState<Record<string, number>>({ "0": 0, "1": 0 });
 
     const socket = useGameSocket({
         onJoined: setPlayerId,
@@ -22,7 +23,10 @@ export default function GameRoomPage({ playerName } : {playerName: string}) {
         onGameState: setGameState,
         onHandUpdate: setHand,
         onError: setErrorMessage,
-        onRoundEnd: (payload) => setRoundWinner(payload.winnerName)
+        onRoundEnd: (payload) => {
+            setRoundWinner(payload.winnerName);
+            setTeamScores(payload.teamScores);
+        }
     });
 
     const hasConnectedRef = useRef(false)
@@ -70,6 +74,7 @@ export default function GameRoomPage({ playerName } : {playerName: string}) {
                     gameState={gameState}
                     selfId={playerId}
                     hand={hand}
+                    teamScores={teamScores}
                     onConfirmPlay={socket.playCards}
                     onPass={socket.pass}
                 />
