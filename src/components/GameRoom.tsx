@@ -40,9 +40,23 @@ export default function GameRoom({ gameState, selfId, hand, teamScores, onConfir
   return (
     <div className="min-h-screen bg-green-300 p-2 flex items-center justify-center">
       <div className="relative w-screen h-screen bg-green-300">
+        {/* Team scores: top left */}
         <div className="absolute top-4 left-4 bg-black/60 text-white px-4 py-2 rounded-lg z-50 font-bold">
             <div>Team A: {teamScores["0"] ?? 0}</div>
             <div>Team B: {teamScores["1"] ?? 0}</div>
+        </div>
+
+        {/* Table info: top right */}
+        <div className="absolute top-4 right-4 bg-black/60 text-white px-4 py-2 rounded-lg z-50 font-bold">
+            <div>
+              Last played by:{" "}
+              {tableState.cards.length === 0
+                ? "—"
+                : gameState.playerStates.find(
+                    p => p.playerId === tableState.lastPlayedPlayerId
+                  )?.playerName ?? "Unknown"}
+            </div>
+            <div>Points on table: {gameState.tablePoints}</div>
         </div>
 
         {/* Table (center) */}
@@ -51,18 +65,6 @@ export default function GameRoom({ gameState, selfId, hand, teamScores, onConfir
           {tableState.cards.length === 0 ? (
               <div className="text-xl opacity-70">No cards on table</div>
           ) : (
-                  <>
-                    {/* Last played player */}
-                    <div className="mb-3 text-lg">
-                      Last played by:{" "}
-                      {
-                          gameState.playerStates.find(
-                              p => p.playerId === tableState.lastPlayedPlayerId
-                          )?.playerName ?? "Unknown"
-                      }
-                    </div>
-
-                    {/* Cards */}
                     <div className="flex gap-2">
                       {tableState.cards.map((card, idx) => (
                           <AnimatedCard
@@ -72,7 +74,6 @@ export default function GameRoom({ gameState, selfId, hand, teamScores, onConfir
                           />
                       ))}
                     </div>
-                  </>
               )}
         </div>
 
