@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import AnimatedCard from "./AnimatedCard";
 import { sortCards } from "../utilities/cardSort";
 
@@ -23,14 +23,12 @@ export default function PlayerHand({
   const [handCards, setHandCards] = useState<string[]>(cards);
   const [hasSorted, setHasSorted] = useState(false);
 
-  useEffect(() => {
-    setHandCards(cards);
-    setHasSorted(false); // reset on new deal
-  }, [cards]);
-
   const isBottom = position === 'bottom';
   const isVertical = direction === 'vertical';
   const isSide = position === 'left' || position === 'right';
+
+  const prevCardsRef = useRef<string[]>(cards);
+  const isFirstRender = useRef(true);
 
   const toggleCard = (idx: number) => {
     if (!isBottom) return;
@@ -78,6 +76,32 @@ export default function PlayerHand({
     top: 'flex flex-col-reverse items-center gap-2',
     bottom: 'flex flex-col items-center gap-2',
   }[position];
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      setHandCards(cards);
+      prevCardsRef.current = cards;
+      return;
+    }
+
+    const prev = prevCardsRef.current;
+    const isNewDeal = prev.length === 0 || cards.length > prev.length;
+
+    if (isNewDeal) {
+      // Genuinely a new hand — accept server order and reset sort state
+      setHandCards(cards);
+      setHasSorted(false);
+    } else {
+      // Cards were removed by a play — remove just those from our current
+      // (possibly sorted) local order, don't touch anything else
+      const removed = diffRemoved(prev, cards);
+      setHandCards(current => removeCardsOnce(current, removed));
+    }
+
+    setSelectedIndexes([]);
+    prevCardsRef.current = cards;
+  }, [cards]);
 
   return (
     <>
@@ -158,4 +182,31 @@ export default function PlayerHand({
       </div>
     </>
   );
+}
+
+// Removes one occurrence of each card in `removed` from `hand`, preserving order
+function removeCardsOnce(hand: string[], removed: string[]): string[] {
+  const result = [...hand];
+  for (const card of removed) {
+    const idx = result.indexOf(card);
+    if (idx !== -1) result.splice(idx, 1);
+  }
+  return result;
+}
+
+// Multiset diff: cards present in `prev` but not accounted for in `next`
+function diffRemoved(prev: string[], next: string[]): string[] {
+  const nextCounts = new Map<string, number>();
+  for (const c of next) nextCounts.set(c, (nextCounts.get(c) || 0) + 1);
+
+  const removed: string[] = [];
+  for (const c of prev) {
+    const count = nextCounts.get(c) || 0;
+    if (count > 0) {
+      nextCounts.set(c, count - 1);
+    } else {
+      removed.push(c);
+    }
+  }
+  return removed;
 }
