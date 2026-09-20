@@ -37,13 +37,16 @@ export default function GameRoom({ gameState, selfId, hand, teamScores, onConfir
     return <div>Loading table...</div>;
   }
 
+  const teamAPlayers = gameState.playerStates.filter(p => p.team === 0).map(p => p.playerName);
+  const teamBPlayers = gameState.playerStates.filter(p => p.team === 1).map(p => p.playerName);
+
   return (
     <div className="min-h-screen bg-green-300 p-2 flex items-center justify-center">
       <div className="relative w-screen h-screen bg-green-300">
         {/* Team scores: top left */}
         <div className="absolute top-4 left-4 bg-black/60 text-white px-4 py-2 rounded-lg z-50 font-bold">
-            <div>Team A: {teamScores["0"] ?? 0}</div>
-            <div>Team B: {teamScores["1"] ?? 0}</div>
+            <div>Team {teamAPlayers.join(" ")}: {teamScores["0"] ?? 0}</div>
+            <div>Team {teamBPlayers.join(" ")}: {teamScores["1"] ?? 0}</div>
         </div>
 
         {/* Table info: top right */}

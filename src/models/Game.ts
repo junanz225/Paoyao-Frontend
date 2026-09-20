@@ -2,6 +2,7 @@ export interface PlayerStateDTO {
     playerId: string;
     playerName: string;
     cardCount: number;
+    team: number;
 }
 
 export interface GameStatePayload {
