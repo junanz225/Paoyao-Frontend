@@ -9,6 +9,7 @@ interface PlayerHandProps {
   position: 'top' | 'bottom' | 'left' | 'right';
   onConfirm?: (cards: string[]) => void;
   onPass?: () => void;
+  isGameOver?: boolean;
 }
 
 export default function PlayerHand({
@@ -17,7 +18,8 @@ export default function PlayerHand({
   playerName,
   position,
   onConfirm,
-  onPass
+  onPass,
+  isGameOver = false,
 }: PlayerHandProps) {
   const [selectedIndexes, setSelectedIndexes] = useState<number[]>([]);
   const [handCards, setHandCards] = useState<string[]>(cards);
@@ -38,6 +40,7 @@ export default function PlayerHand({
   };
 
   const handleConfirm = () => {
+    if (isGameOver) return;
     const selected = selectedIndexes.map(i => handCards[i]);
     console.log("CONFIRM clicked, selected:", selected);
     onConfirm?.(selected);
@@ -45,6 +48,7 @@ export default function PlayerHand({
   };
 
   const handlePass = () => {
+    if (isGameOver) return;
     setSelectedIndexes([]); // clear any selected cards before passing
     onPass?.();
   };
@@ -162,6 +166,7 @@ export default function PlayerHand({
               className="absolute px-4 py-2 bg-blue-500 text-white rounded-lg shadow z-50"
               style={{ top: '-45px', right: '-110px' }}
               onClick={handleConfirm}
+              disabled={isGameOver}
             >
               Confirm
             </button>
@@ -173,6 +178,7 @@ export default function PlayerHand({
               className="absolute px-4 py-2 bg-yellow-500 text-white rounded-lg shadow z-50 whitespace-nowrap"
               style={{ top: '-45px', left: '0px' }}
               onClick={handlePass}
+              disabled={isGameOver}
             >
               Pass
             </button>

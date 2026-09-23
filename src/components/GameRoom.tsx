@@ -10,9 +10,10 @@ interface GameRoomProps {
   teamScores: Record<string, number>;
   onConfirmPlay: (cards: string[]) => void;
   onPass: () => void;
+  isGameOver: boolean;
 }
 
-export default function GameRoom({ gameState, selfId, hand, teamScores, onConfirmPlay, onPass }: GameRoomProps) {
+export default function GameRoom({ gameState, selfId, hand, teamScores, onConfirmPlay, onPass, isGameOver }: GameRoomProps) {
 
   const tableState = gameState.tableState ?? {
     lastPlayedPlayerId: null,
@@ -107,6 +108,7 @@ export default function GameRoom({ gameState, selfId, hand, teamScores, onConfir
             position="bottom"
             onConfirm={onConfirmPlay}
             onPass={onPass}
+            isGameOver={isGameOver}
           />
         </div>
 

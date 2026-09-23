@@ -4,6 +4,7 @@ import {useGameSocket} from "../hooks/useGameSocket";
 import {GameStatePayload} from "../models/Game";
 import {useEffect, useRef, useState} from "react";
 import { PlayerStateDTO } from "../models/Game";
+import GameEndOverlay from "../components/GameEndOverlay";
 
 export default function GameRoomPage({ playerName } : {playerName: string}) {
     const [phase, setPhase] = useState<"waiting" | "game">("waiting");
@@ -14,6 +15,11 @@ export default function GameRoomPage({ playerName } : {playerName: string}) {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [roundWinner, setRoundWinner] = useState<string | null>(null);
     const [teamScores, setTeamScores] = useState<Record<string, number>>({ "0": 0, "1": 0 });
+    const [gameOver, setGameOver] = useState<{
+        winningTeam: number;
+        teamScores: Record<string, number>;
+        winReason: string;
+    } | null>(null);
 
     const socket = useGameSocket({
         onJoined: setPlayerId,
@@ -25,6 +31,10 @@ export default function GameRoomPage({ playerName } : {playerName: string}) {
         onError: setErrorMessage,
         onRoundEnd: (payload) => {
             setRoundWinner(payload.winnerName);
+            setTeamScores(payload.teamScores);
+        },
+        onGameEnd: (payload) => {              // <-- new
+            setGameOver(payload);
             setTeamScores(payload.teamScores);
         }
     });
@@ -70,6 +80,13 @@ export default function GameRoomPage({ playerName } : {playerName: string}) {
                         {roundWinner} won the round!
                     </div>
                 )}
+                {gameOver && (
+                    <GameEndOverlay
+                        winningTeam={gameOver.winningTeam}
+                        teamScores={gameOver.teamScores}
+                        winReason={gameOver.winReason}
+                    />
+                )}
                 <GameRoom
                     gameState={gameState}
                     selfId={playerId}
@@ -77,6 +94,7 @@ export default function GameRoomPage({ playerName } : {playerName: string}) {
                     teamScores={teamScores}
                     onConfirmPlay={socket.playCards}
                     onPass={socket.pass}
+                    isGameOver={!!gameOver}
                 />
             </>
         );
