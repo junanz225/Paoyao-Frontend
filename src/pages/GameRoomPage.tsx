@@ -80,8 +80,16 @@ export default function GameRoomPage({ playerName } : {playerName: string}) {
                         {roundWinner} won the round!
                     </div>
                 )}
-                {gameOver && (
+                {gameOver && gameState && (
                     <GameEndOverlay
+                        didWin={
+                            gameState.playerStates.find(p => p.playerId === playerId)?.team
+                            === gameOver.winningTeam
+                        }
+                        teamLabels={{
+                            "0": gameState.playerStates.filter(p => p.team === 0).map(p => p.playerName).join(" "),
+                            "1": gameState.playerStates.filter(p => p.team === 1).map(p => p.playerName).join(" "),
+                        }}
                         winningTeam={gameOver.winningTeam}
                         teamScores={gameOver.teamScores}
                         winReason={gameOver.winReason}
